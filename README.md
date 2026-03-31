@@ -88,6 +88,8 @@ Selain itu, trait akan lebih berguna jika di dalam publisher ada beberapa jenis 
 
 3. Dalam konteks design pattern, Singleton digunakan untuk memastikan bahwa hanya ada satu instance bersama yang mengelola data repository. Pada BambangShop, ini memang relevan karena kita ingin seluruh bagian aplikasi mengakses sumber data subscriber yang sama, bukan membuat repository yang berbeda-beda untuk tiap request. Namun, menurut saya Singleton saja tidak cukup untuk kasus ini. Alasannya aplikasi web tidak berjalan secara single-threaded sederhana. Dalam Rocket, beberapa request bisa datang hampir bersamaan, sehingga data repository dapat diakses dan dimodifikasi oleh banyak thread pada waktu yang sama. Jika kita hanya membuat Singleton biasa tanpa mekanisme thread safety, maka akan muncul risiko race condition, data tidak konsisten, atau bahkan panic ketika beberapa thread mencoba membaca dan menulis data bersamaan. Di sinilah DashMap menjadi penting. lazy_static memang membantu kita membuat shared global state yang sifatnya mirip Singleton, tetapi lazy_static hanya menyelesaikan persoalan “satu instance global”, bukan persoalan keamanan akses bersamaan. DashMap melengkapi kebutuhan tersebut dengan menyediakan struktur data map yang aman untuk concurrent access. Dengan kata lain, pada implementasi ini, lazy_static berperan sebagai mekanisme singleton-like storage, sedangkan DashMap berperan sebagai thread-safe container.
 
+# (Biar bisa pull request)
+
 #### Reflection Publisher-2
 
 #### Reflection Publisher-3
